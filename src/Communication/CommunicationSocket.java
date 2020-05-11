@@ -136,4 +136,16 @@ public class CommunicationSocket {
 
         send(jsonObject.toJSONString());
     }
+
+    public boolean isClosed() {
+        return socket.isClosed();
+    }
+
+    public void sendManagerClose() throws IOException {
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put(USER_REQUEST, MANAGER_CLOSE);
+
+        send(jsonObject.toJSONString());
+    }
 }

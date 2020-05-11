@@ -24,6 +24,8 @@ public class CommunicationConstant {
 
     public static final String KICK_OUT_USER = "Kick out user";
 
+    public static final String MANAGER_CLOSE = "Manager closed the whiteboard";
+
     public static final String RESULT = "result";
 
     public static final String USERNAME = "username";

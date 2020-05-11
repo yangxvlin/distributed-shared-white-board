@@ -51,12 +51,7 @@ public class WhiteBoardApplication extends JFrame {
             public void windowClosing(WindowEvent e)
             {
                 System.out.println("Closed");
-                if (!isKickedOut) {
-                    clientConnection.disconnect(isManager, uid);
-                }
-                stop();
-                e.getWindow().dispose();
-                System.exit(0);
+                closeFrame(e);
             }
         });
         frame.setSize(1000, 700);
@@ -191,5 +186,31 @@ public class WhiteBoardApplication extends JFrame {
         stop();
         popupDialog("Kicked out by the manager");
         isKickedOut = true;
+        closeFrame();
+    }
+
+    private void closeFrame() {
+        if (!isKickedOut) {
+            clientConnection.disconnect(isManager, uid);
+        }
+        frame.dispose();
+        System.exit(0);
+    }
+
+    private void closeFrame(WindowEvent e) {
+        if (!isKickedOut) {
+            clientConnection.disconnect(isManager, uid);
+        }
+        stop();
+        e.getWindow().dispose();
+        System.exit(0);
+    }
+
+    public void closeByManager() {
+        frame.setTitle(frame.getTitle() + " - [Closed]");
+        stop();
+        popupDialog("Closed by the manager");
+        isKickedOut = true;
+        closeFrame();
     }
 }

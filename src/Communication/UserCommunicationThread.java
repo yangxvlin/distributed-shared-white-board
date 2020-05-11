@@ -42,6 +42,9 @@ public class UserCommunicationThread extends Thread {
 
                     app.kickedOut();
                     break;
+                case MANAGER_CLOSE:
+                    app.closeByManager();
+                    break;
                 default:
                     System.out.println("Unknown request: " + request);
             }

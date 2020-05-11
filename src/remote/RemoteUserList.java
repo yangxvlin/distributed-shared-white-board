@@ -27,7 +27,7 @@ public class RemoteUserList extends UnicastRemoteObject implements IRemoteUserLi
     public void addUser(String userName) throws RemoteException{
         usernames.add(userName);
         System.out.println("added: " + userName);
-        System.out.println(Arrays.toString(usernames.toArray()));
+        System.out.println("   |"+ Arrays.toString(usernames.toArray()));
     }
 
     @Override

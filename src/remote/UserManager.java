@@ -3,11 +3,11 @@ package remote;
 import Communication.CommunicationSocket;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Xulin Yang, 904904
@@ -147,6 +147,24 @@ public class UserManager {
             e.printStackTrace();
         }
         candidateUsers.clear();
+    }
+
+    public synchronized void broadcastManagerClose() {
+        for (Map.Entry<String, CommunicationSocket> entry: usersSocket.entrySet()) {
+            String uid = entry.getKey();
+            CommunicationSocket communicationSocket = entry.getValue();
+
+            if (communicationSocket.isClosed()) {
+                System.out.println("    | " + uid + " socket has already closed");
+            } else if (!uid.equals(managerUID)) {
+                System.out.println("    | " + uid + " close as manager close");
+                try {
+                    communicationSocket.sendManagerClose();
+                } catch (IOException e) {
+                    System.out.println("        |Socket error");
+                }
+            }
+        }
     }
 
 //    public synchronized void registerUser(Socket client) {

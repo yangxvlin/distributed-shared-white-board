@@ -89,17 +89,17 @@ public class ClientRequestsThread extends Thread {
                         userManager.removeUser(uidToBeRemoved);
                         break;
                     case CLOSE_WHITE_BOARD:
-
+                        userManager.broadcastManagerClose();
                         userManager.clear();
                         break;
                     case KICK_OUT_USER:
                         String kickOutUID = (String) jsonObject.get(UID);
                         CommunicationSocket kickOutSocket = userManager.getCommunicationSocket(kickOutUID);
                         if (kickOutSocket != null) {
-                            System.out.println("send kick out request to " + UID);
+                            System.out.println("    |send kick out request to " + UID);
                             kickOutSocket.sendKickOutRequest();
                         } else {
-                            System.out.println("kick out non-existing uer: " + UID);
+                            System.out.println("    |kick out non-existing uer: " + UID);
                         }
                         userManager.removeUser(kickOutUID);
                         break;
