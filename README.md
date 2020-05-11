@@ -5,6 +5,18 @@ Shared whiteboards allow multiple users to draw simultaneously on a canvas. Ther
 
 ## How to run
 
+    The first user creates a whiteboard and becomes the whiteboard’s manager
+        - java CreateWhiteBoard <serverIPAddress> <serverPort> username
+    Other users can ask to join the whiteboard application any time by inputting server’s IP address and port number
+        - java JoinWhiteBoard <serverIPAddress> <serverPort> username
+
+### steps
+1. ```cd output/production/distributed-shared-white-board```
+2. ```start rmiregistry```
+3. server
+4. create
+5. join
+
 ## todo
 ### Client
 - connect and join in by getting approval from the manager
@@ -22,12 +34,27 @@ Shared whiteboards allow multiple users to draw simultaneously on a canvas. Ther
     - save the current one, and 
     - close the application.
         - close the application, and all peers get notified
+- A “File” menu with 
+    - new, 
+    - open, 
+    - save, 
+    - saveAs and 
+    - close 
+
+    should be provided (only the manager can control this)
 
 ### Whiteboard
 - join in means the peer name will appear in the user list
     - An online peer list should be maintained and displayed
 - All the peers will see the identical image of the whiteboard, as well as 
     - have the privilege of doing all the operations.
+- GUI
+    - Shapes: 
+        - line, 
+        - circle, and 
+        - rectangle.
+    - Text inputting must be implemented 
+        - allow user to type text anywhere inside the white board.
 
 ### Server
 - Users must provide a username when joining the whiteboard. 
