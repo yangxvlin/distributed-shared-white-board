@@ -10,7 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 
-import static WhiteBoard.Contant.REMOTE_OBJECT_UI_UPDATE_RATE;
+import static WhiteBoard.Contant.*;
 import static WhiteBoard.Util.popupDialog;
 import static WhiteBoard.Util.popupErrorDialog;
 import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
@@ -38,8 +38,12 @@ public class WhiteBoardApplication extends JFrame {
 
     private boolean isKickedOut = false;
 
+    private PaintManager paintManager;
+
     public WhiteBoardApplication(boolean isManager) {
         this.isManager = isManager;
+
+        this.paintManager = new PaintManager();
 
         frame = new JFrame();
         frame.setLayout(null);
@@ -101,6 +105,45 @@ public class WhiteBoardApplication extends JFrame {
         jLabel.setSize(jLabel.getPreferredSize());
         jLabel.setLocation(700, 5);
         frame.add(jLabel);
+
+
+
+        JRadioButton circleButton = new JRadioButton(CIRCLE);
+        circleButton.setBounds(10, 5, 100, 40);
+        circleButton.setActionCommand(CIRCLE);
+        circleButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
+        circleButton.doClick();
+
+        JRadioButton rectangleButton = new JRadioButton(RECTANGLE);
+        rectangleButton.setBounds(120, 5, 100, 40);
+        rectangleButton.setActionCommand(RECTANGLE);
+        rectangleButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
+
+        JRadioButton lineButton = new JRadioButton(LINE);
+        lineButton.setBounds(230, 5, 100, 40);
+        lineButton.setActionCommand(LINE);
+        lineButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
+
+        JRadioButton textButton = new JRadioButton(TEXT);
+        textButton.setBounds(340, 5, 100, 40);
+        textButton.setActionCommand(TEXT);
+        textButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(circleButton);
+        group.add(rectangleButton);
+        group.add(lineButton);
+        group.add(textButton);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(null);
+        buttonPanel.setBounds(0, 0, 430, 40);
+        buttonPanel.add(circleButton);
+        buttonPanel.add(rectangleButton);
+        buttonPanel.add(lineButton);
+        buttonPanel.add(textButton);
+
+        frame.add(buttonPanel);
 
 //        frame.setVisible(true);
     }

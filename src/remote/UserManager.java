@@ -138,6 +138,7 @@ public class UserManager {
     }
 
     public synchronized void clear() {
+        System.out.println("    | clear UserManager");
         userCounter = 0;
         usersSocket.clear();
         managerUID = null;
