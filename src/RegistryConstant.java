@@ -1,3 +1,4 @@
+import remote.RemoteCanvas;
 import remote.RemoteUserList;
 
 /**
@@ -13,4 +14,6 @@ public class RegistryConstant {
 //    public static final String WHITEBOARD_APPLICATION = RemoteWhiteBoard.class.getName();
 
     public static final String REMOTE_USER_LIST = RemoteUserList.class.getName();
+
+    public static final String REMOTE_CANVAS = RemoteCanvas.class.getName();
 }

@@ -1,8 +1,5 @@
 package WhiteBoard;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * Xulin Yang, 904904
  *
@@ -23,6 +20,10 @@ public class Contant {
     public static final String RECTANGLE = "Rectangle";
 
     public static final String TEXT = "Text";
+
+    public static final int CANVAS_WIDTH = 600;
+
+    public static final int CANVAS_HEIGHT = 600;
 
 //    public static final List<String> PAINT_TOOL_NAMES = Arrays.asList("Line", "Circle", "Rectangle", "Text");
 }

@@ -1,6 +1,7 @@
 package WhiteBoard;
 
 import Communication.ClientConnection;
+import remote.IRemoteCanvas;
 import remote.IRemoteUserList;
 
 import javax.swing.*;
@@ -32,6 +33,8 @@ public class WhiteBoardApplication extends JFrame {
 
     private Thread updateUserListThread;
 
+//    private Thread updateCanvasThread;
+
     private ClientConnection clientConnection;
 
     private IRemoteUserList remoteUserList;
@@ -39,6 +42,8 @@ public class WhiteBoardApplication extends JFrame {
     private boolean isKickedOut = false;
 
     private PaintManager paintManager;
+
+    private WhiteboardCanvasPanel whiteboardCanvasPanel;
 
     public WhiteBoardApplication(boolean isManager) {
         this.isManager = isManager;
@@ -49,23 +54,25 @@ public class WhiteBoardApplication extends JFrame {
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // When close the window, it should remove its information in the system.
-        frame.addWindowListener(new WindowAdapter()
-        {
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e)
             {
                 System.out.println("Closed");
+                if (isManager) {
+                    paintManager.clearCanvas();
+                }
                 closeFrame(e);
             }
         });
-        frame.setSize(1000, 700);
+        frame.setSize(1000, 800);
         frame.setResizable(false);
 
         if (this.isManager) {
             frame.setTitle(APP_TITLE + " (Manager)");
             JMenuBar menuBar = new JMenuBar();
             frame.setJMenuBar(menuBar);
-            FileMenu fileMenu = new FileMenu();
+            FileMenu fileMenu = new FileMenu(frame, paintManager);
             menuBar.add(fileMenu);
 
             JLabel kickOutLabel = new JLabel("Kick out an user:");
@@ -107,7 +114,6 @@ public class WhiteBoardApplication extends JFrame {
         frame.add(jLabel);
 
 
-
         JRadioButton circleButton = new JRadioButton(CIRCLE);
         circleButton.setBounds(10, 5, 100, 40);
         circleButton.setActionCommand(CIRCLE);
@@ -145,7 +151,54 @@ public class WhiteBoardApplication extends JFrame {
 
         frame.add(buttonPanel);
 
+        this.whiteboardCanvasPanel = new WhiteboardCanvasPanel(paintManager);
+        whiteboardCanvasPanel.setBounds(10, 50, CANVAS_WIDTH, CANVAS_HEIGHT);
+        frame.add(whiteboardCanvasPanel);
+
 //        frame.setVisible(true);
+    }
+
+    public void setClientConnection(ClientConnection clientConnection) {
+        this.clientConnection = clientConnection;
+    }
+
+    public void setRemoteCanvas(IRemoteCanvas remoteCanvas) {
+        paintManager.setRemoteCanvas(remoteCanvas);
+
+//        updateCanvasThread = new Thread() {
+//            @Override
+//            public void run() {
+//                super.run();
+//
+//                while (true) {
+//                    try {
+//                        whiteboardCanvasPanel.getGraphics()
+//                                .drawImage(paintManager.getRemoteCanvas().getCanvas().getImage(),
+//                                        0,
+//                                        0,
+//                                        whiteboardCanvasPanel.getWidth(),
+//                                        whiteboardCanvasPanel.getHeight(),
+//                                        null);
+//                        whiteboardCanvasPanel.repaint();
+//                    } catch (NullPointerException e) {
+//                        System.out.println("Null pointer in update canvas");
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
+//                        popupNoServerConnectionErrorDialog();
+//                        break;
+//                    }
+//
+//                    try {
+//                        Thread.sleep(REMOTE_OBJECT_UI_UPDATE_RATE);
+//                    } catch (InterruptedException e) {
+//                        System.out.println("Thread sleep error");
+//                        break;
+//                    }
+//                }
+//            }
+//        };
+//
+//        updateCanvasThread.start();
     }
 
     public void setRemoteUserList(IRemoteUserList remoteUserList) {
@@ -209,6 +262,7 @@ public class WhiteBoardApplication extends JFrame {
 
     public void stop() {
         updateUserListThread.interrupt();
+//        updateCanvasThread.interrupt();
     }
 
     public boolean isManager() {
@@ -218,10 +272,6 @@ public class WhiteBoardApplication extends JFrame {
     public boolean askAcceptCandidate(String candidateUID) {
         TimeDialog dialog = new TimeDialog();
         return dialog.showDialog(frame, candidateUID + SHARE_PROMPT, ASK_MANAGER_JOIN_TIMEOUT);
-    }
-
-    public void setClientConnection(ClientConnection clientConnection) {
-        this.clientConnection = clientConnection;
     }
 
     public void kickedOut() {

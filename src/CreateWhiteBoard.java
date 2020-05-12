@@ -2,6 +2,7 @@ import Communication.ClientConnection;
 import Communication.CommunicationSocket;
 import Communication.ManagerCommunicationThread;
 import WhiteBoard.WhiteBoardApplication;
+import remote.IRemoteCanvas;
 import remote.IRemoteUserList;
 
 import java.io.IOException;
@@ -37,7 +38,9 @@ public class CreateWhiteBoard {
             Registry registry = LocateRegistry.getRegistry("localhost");
 
             IRemoteUserList remoteUserList = (IRemoteUserList) registry.lookup(RegistryConstant.REMOTE_USER_LIST);
+            IRemoteCanvas remoteCanvas = (IRemoteCanvas) registry.lookup(RegistryConstant.REMOTE_CANVAS);
             app.setRemoteUserList(remoteUserList);
+            app.setRemoteCanvas(remoteCanvas);
 
             // create socket
             CommunicationSocket socket = new CommunicationSocket(serverAddress, serverPort);

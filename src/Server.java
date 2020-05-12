@@ -1,8 +1,6 @@
 import Communication.ClientRequestsThread;
 import Communication.CommunicationSocket;
-import remote.IRemoteUserList;
-import remote.RemoteUserList;
-import remote.UserManager;
+import remote.*;
 
 import javax.net.ServerSocketFactory;
 import java.io.IOException;
@@ -38,6 +36,7 @@ public class Server {
 //            RemoteWhiteBoard stubWhiteBoard = (RemoteWhiteBoard) UnicastRemoteObject.exportObject(whiteBoardApplication, 0);
 
             IRemoteUserList userList = new RemoteUserList();
+            IRemoteCanvas canvas = new RemoteCanvas();
 
             Registry registry = LocateRegistry.getRegistry();
 //            registry.bind(RegistryConstant.WHITEBOARD_APPLICATION, stubWhiteBoard);
@@ -45,6 +44,7 @@ public class Server {
 //            registry.bind(RegistryConstant.CLIENT_OPERATION, remoteUserOperation);
 
             registry.bind(RegistryConstant.REMOTE_USER_LIST, userList);
+            registry.bind(RegistryConstant.REMOTE_CANVAS, canvas);
             System.out.println("RMI ready");
             userManager.setRemoteUserList(userList);
         } catch (AlreadyBoundException e) {
