@@ -1,6 +1,7 @@
 package WhiteBoard;
 
 import remote.IRemoteCanvas;
+import remote.SerializableBufferedImage;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,7 +9,9 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
 
+import static WhiteBoard.Util.popupDialog;
 import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
+import static WhiteBoard.Util.saveImage;
 
 /**
  * Xulin Yang, 904904
@@ -198,11 +201,20 @@ public class PaintManager {
 
     public void setImage(BufferedImage image) {
         try {
-            remoteCanvas.setImage(image);
+            remoteCanvas.setImage(new SerializableBufferedImage(image));
         } catch (RemoteException e) {
             popupNoServerConnectionErrorDialog();
         }
-        clearCanvas();
         clearPoints();
+    }
+
+    public void saveWhiteBoard(String fileName) {
+        try {
+            saveImage(this.getRemoteCanvas().getCanvas().getImage(), fileName);
+            popupDialog("Successful save whiteboard to image: " + fileName);
+            System.out.println("    | Successful ave whiteboard to image: " + fileName);
+        } catch (RemoteException e1) {
+            popupNoServerConnectionErrorDialog();
+        }
     }
 }

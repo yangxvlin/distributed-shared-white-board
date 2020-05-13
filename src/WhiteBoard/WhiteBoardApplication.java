@@ -45,6 +45,8 @@ public class WhiteBoardApplication extends JFrame {
 
     private WhiteboardCanvasPanel whiteboardCanvasPanel;
 
+    private String appTitle;
+
     public WhiteBoardApplication(boolean isManager) {
         this.isManager = isManager;
 
@@ -69,10 +71,11 @@ public class WhiteBoardApplication extends JFrame {
         frame.setResizable(false);
 
         if (this.isManager) {
-            frame.setTitle(APP_TITLE + " (Manager)");
+            appTitle = APP_TITLE + " (Manager)";
+            frame.setTitle(appTitle);
             JMenuBar menuBar = new JMenuBar();
             frame.setJMenuBar(menuBar);
-            FileMenu fileMenu = new FileMenu(frame, paintManager);
+            FileMenu fileMenu = new FileMenu(appTitle, frame, paintManager);
             menuBar.add(fileMenu);
 
             JLabel kickOutLabel = new JLabel("Kick out an user:");
@@ -105,7 +108,8 @@ public class WhiteBoardApplication extends JFrame {
             });
             frame.add(kickOutButton);
         } else {
-            frame.setTitle(APP_TITLE + " (User)");
+            appTitle = APP_TITLE + " (User)";
+            frame.setTitle(appTitle);
         }
 
         JLabel jLabel = new JLabel("Users: username (uid)");
@@ -305,5 +309,9 @@ public class WhiteBoardApplication extends JFrame {
         popupDialog("Closed by the manager");
         isKickedOut = true;
         closeFrame();
+    }
+
+    public String getAppTitle() {
+        return appTitle;
     }
 }

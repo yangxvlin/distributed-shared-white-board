@@ -58,8 +58,8 @@ public class RemoteCanvas extends UnicastRemoteObject implements IRemoteCanvas {
     }
 
     @Override
-    public void setImage(BufferedImage image) throws RemoteException {
-        canvas.setImage(image);
+    public void setImage(SerializableBufferedImage image) throws RemoteException {
+        canvas = image;
     }
 
     @Override

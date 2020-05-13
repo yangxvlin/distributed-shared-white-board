@@ -2,6 +2,7 @@ package WhiteBoard;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.rmi.RemoteException;
 
-import static WhiteBoard.Util.popupDialog;
+import static WhiteBoard.Util.*;
 
 /**
  * Xulin Yang, 904904
@@ -23,7 +25,7 @@ import static WhiteBoard.Util.popupDialog;
  **/
 
 public class FileMenu extends JMenu {
-    public FileMenu(Frame frame, PaintManager paintManager) {
+    public FileMenu(String appTitle, Frame frame, PaintManager paintManager) {
         super("File (Alt+F)");
         setMnemonic(KeyEvent.VK_F);
 
@@ -45,6 +47,8 @@ public class FileMenu extends JMenu {
                 System.out.println("Open pressed");
 
                 final JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("IMAGE FILES", IMAGE_TYPE);
+                fc.setFileFilter(filter);
                 // Open the dialog using null as parent component if you are outside a
                 // Java Swing application otherwise provide the parent comment instead
                 int returnVal = fc.showOpenDialog(frame);
@@ -64,7 +68,9 @@ public class FileMenu extends JMenu {
                     try {
                         img = ImageIO.read(file);
                         paintManager.setImage(img);
+                        popupDialog("Successful open image: " + file.getName());
                     } catch (IOException e1) {
+                        e1.printStackTrace();
                         popupDialog("Read image fail.");
                     }
                 }
@@ -77,6 +83,8 @@ public class FileMenu extends JMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Save pressed");
+                String fileName = generateAutoFileName();
+                paintManager.saveWhiteBoard(fileName);
             }
         });
         add(save);
@@ -86,6 +94,34 @@ public class FileMenu extends JMenu {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Save As pressed");
+
+                JFileChooser fc = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("IMAGE FILES", IMAGE_TYPE);
+                fc.setFileFilter(filter);
+//                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                int returnVal = fc.showSaveDialog(frame);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    // Retrieve the selected file
+                    File file = fc.getSelectedFile();
+                    String fileName = file.getPath();
+                    if (!fileName.endsWith("." + IMAGE_TYPE)) {
+                        fileName += "." + IMAGE_TYPE;
+                    }
+                    file = new File(fileName);
+                    boolean result = false;
+                    try {
+                        result = file.createNewFile();
+                    } catch (IOException e1) {
+                        popupDialog("File creation fail: " + file);
+                        return;
+                    }
+                    if (result) {
+                        System.out.println("    | Successful create image file: " + file);
+                    }
+
+                    paintManager.saveWhiteBoard(fileName);
+                }
             }
         });
         add(saveAs);

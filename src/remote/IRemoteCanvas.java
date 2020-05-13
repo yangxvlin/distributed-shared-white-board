@@ -16,7 +16,7 @@ public interface IRemoteCanvas extends Remote {
 
     void drawCircle(int x, int y, int width, int height) throws RemoteException;
 
-    void setImage(BufferedImage image) throws RemoteException;
+    void setImage(SerializableBufferedImage image) throws RemoteException;
 
     void clearAll() throws RemoteException;
 }
