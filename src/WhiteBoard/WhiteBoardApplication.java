@@ -24,7 +24,7 @@ import static WhiteBoard.WhiteBoardConstant.*;
  * description:
  **/
 
-public class WhiteBoardApplication extends JFrame {
+public class WhiteBoardApplication {
     private boolean isManager;
 
     private JFrame frame;
@@ -46,6 +46,8 @@ public class WhiteBoardApplication extends JFrame {
     private WhiteboardCanvasPanel whiteboardCanvasPanel;
 
     private String appTitle;
+
+    private FileMenu fileMenu;
 
     public WhiteBoardApplication(boolean isManager) {
         this.isManager = isManager;
@@ -75,7 +77,7 @@ public class WhiteBoardApplication extends JFrame {
             frame.setTitle(appTitle);
             JMenuBar menuBar = new JMenuBar();
             frame.setJMenuBar(menuBar);
-            FileMenu fileMenu = new FileMenu(appTitle, frame, paintManager);
+            fileMenu = new FileMenu(appTitle, frame, paintManager);
             menuBar.add(fileMenu);
 
             JLabel kickOutLabel = new JLabel("Kick out an user:");
@@ -119,39 +121,46 @@ public class WhiteBoardApplication extends JFrame {
 
 
         JRadioButton circleButton = new JRadioButton(CIRCLE);
-        circleButton.setBounds(10, 5, 100, 40);
+        circleButton.setBounds(10, 5, 60, 40);
         circleButton.setActionCommand(CIRCLE);
         circleButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
         circleButton.doClick();
 
         JRadioButton rectangleButton = new JRadioButton(RECTANGLE);
-        rectangleButton.setBounds(120, 5, 100, 40);
+        rectangleButton.setBounds(80, 5, 100, 40);
         rectangleButton.setActionCommand(RECTANGLE);
         rectangleButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
 
         JRadioButton lineButton = new JRadioButton(LINE);
-        lineButton.setBounds(230, 5, 100, 40);
+        lineButton.setBounds(190, 5, 60, 40);
         lineButton.setActionCommand(LINE);
         lineButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
 
         JRadioButton textButton = new JRadioButton(TEXT);
-        textButton.setBounds(340, 5, 100, 40);
+        textButton.setBounds(260, 5, 60, 40);
         textButton.setActionCommand(TEXT);
         textButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
+
+        JRadioButton penButton = new JRadioButton(PEN);
+        penButton.setBounds(330, 5, 60, 40);
+        penButton.setActionCommand(PEN);
+        penButton.addActionListener(paintManager.PAINT_TOOL_ACTION_LISTENER);
 
         ButtonGroup group = new ButtonGroup();
         group.add(circleButton);
         group.add(rectangleButton);
         group.add(lineButton);
         group.add(textButton);
+        group.add(penButton);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(null);
-        buttonPanel.setBounds(0, 0, 430, 40);
+        buttonPanel.setBounds(0, 0, 450, 40);
         buttonPanel.add(circleButton);
         buttonPanel.add(rectangleButton);
         buttonPanel.add(lineButton);
         buttonPanel.add(textButton);
+        buttonPanel.add(penButton);
 
         frame.add(buttonPanel);
 
@@ -164,45 +173,13 @@ public class WhiteBoardApplication extends JFrame {
 
     public void setClientConnection(ClientConnection clientConnection) {
         this.clientConnection = clientConnection;
+        if (this.isManager) {
+            this.fileMenu.setClientConnection(clientConnection);
+        }
     }
 
     public void setRemoteCanvas(IRemoteCanvas remoteCanvas) {
         paintManager.setRemoteCanvas(remoteCanvas);
-
-//        updateCanvasThread = new Thread() {
-//            @Override
-//            public void run() {
-//                super.run();
-//
-//                while (true) {
-//                    try {
-//                        whiteboardCanvasPanel.getGraphics()
-//                                .drawImage(paintManager.getRemoteCanvas().getCanvas().getImage(),
-//                                        0,
-//                                        0,
-//                                        whiteboardCanvasPanel.getWidth(),
-//                                        whiteboardCanvasPanel.getHeight(),
-//                                        null);
-//                        whiteboardCanvasPanel.repaint();
-//                    } catch (NullPointerException e) {
-//                        System.out.println("Null pointer in update canvas");
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                        popupNoServerConnectionErrorDialog();
-//                        break;
-//                    }
-//
-//                    try {
-//                        Thread.sleep(REMOTE_OBJECT_UI_UPDATE_RATE);
-//                    } catch (InterruptedException e) {
-//                        System.out.println("Thread sleep error");
-//                        break;
-//                    }
-//                }
-//            }
-//        };
-//
-//        updateCanvasThread.start();
     }
 
     public void setRemoteUserList(IRemoteUserList remoteUserList) {
@@ -309,6 +286,10 @@ public class WhiteBoardApplication extends JFrame {
         popupDialog("Closed by the manager");
         isKickedOut = true;
         closeFrame();
+    }
+
+    public void notifyUser(String msg) {
+        popupDialog(msg);
     }
 
     public String getAppTitle() {

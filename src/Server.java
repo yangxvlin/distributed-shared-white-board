@@ -1,5 +1,6 @@
 import Communication.ClientRequestsThread;
 import Communication.CommunicationSocket;
+import ServerGUI.ServerGUI;
 import remote.*;
 
 import javax.net.ServerSocketFactory;
@@ -47,6 +48,9 @@ public class Server {
             registry.bind(RegistryConstant.REMOTE_CANVAS, canvas);
             System.out.println("RMI ready");
             userManager.setRemoteUserList(userList);
+
+            ServerGUI serverGUI = new ServerGUI(userList);
+            System.out.println("GUI ready");
         } catch (AlreadyBoundException e) {
             e.printStackTrace();
         } catch (AccessException e) {

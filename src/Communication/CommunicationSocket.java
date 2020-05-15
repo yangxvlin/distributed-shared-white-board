@@ -141,10 +141,10 @@ public class CommunicationSocket {
         return socket.isClosed();
     }
 
-    public void sendManagerClose() throws IOException {
+    public void sendManagerOperation(String operation) throws IOException {
         JSONObject jsonObject = new JSONObject();
 
-        jsonObject.put(USER_REQUEST, MANAGER_CLOSE);
+        jsonObject.put(USER_REQUEST, operation);
 
         send(jsonObject.toJSONString());
     }

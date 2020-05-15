@@ -150,7 +150,7 @@ public class UserManager {
         candidateUsers.clear();
     }
 
-    public synchronized void broadcastManagerClose() {
+    public synchronized void broadcastManagerOperation(String operation) {
         for (Map.Entry<String, CommunicationSocket> entry: usersSocket.entrySet()) {
             String uid = entry.getKey();
             CommunicationSocket communicationSocket = entry.getValue();
@@ -158,9 +158,9 @@ public class UserManager {
             if (communicationSocket.isClosed()) {
                 System.out.println("    | " + uid + " socket has already closed");
             } else if (!uid.equals(managerUID)) {
-                System.out.println("    | " + uid + " close as manager close");
+                System.out.println("    | " + uid + " sent with manager operation: " + operation);
                 try {
-                    communicationSocket.sendManagerClose();
+                    communicationSocket.sendManagerOperation(operation);
                 } catch (IOException e) {
                     System.out.println("        |Socket error");
                 }

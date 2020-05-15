@@ -89,7 +89,7 @@ public class ClientRequestsThread extends Thread {
                         userManager.removeUser(uidToBeRemoved);
                         break;
                     case CLOSE_WHITE_BOARD:
-                        userManager.broadcastManagerClose();
+                        userManager.broadcastManagerOperation(MANAGER_CLOSE);
                         userManager.clear();
                         break;
                     case KICK_OUT_USER:
@@ -102,6 +102,12 @@ public class ClientRequestsThread extends Thread {
                             System.out.println("    |kick out non-existing uer: " + UID);
                         }
                         userManager.removeUser(kickOutUID);
+                        break;
+                    case MANAGER_NEW:
+                        userManager.broadcastManagerOperation(MANAGER_NEW);
+                        break;
+                    case MANAGER_OPEN:
+                        userManager.broadcastManagerOperation(MANAGER_OPEN);
                         break;
                     default:
                         System.out.println("Unknown request type: " + request);

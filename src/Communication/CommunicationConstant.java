@@ -26,6 +26,10 @@ public class CommunicationConstant {
 
     public static final String MANAGER_CLOSE = "Manager closed the whiteboard";
 
+    public static final String MANAGER_NEW = "Manager new a whiteboard";
+
+    public static final String MANAGER_OPEN = "Manager open a whiteboard";
+
     public static final String RESULT = "result";
 
     public static final String USERNAME = "username";

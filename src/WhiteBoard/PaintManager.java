@@ -30,6 +30,8 @@ public class PaintManager {
 
     private Point firstPoint;
 
+    private long lastUpdateTime;
+
     public final ActionListener PAINT_TOOL_ACTION_LISTENER = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -44,15 +46,6 @@ public class PaintManager {
 
     public String getSelectedToolName() {
         return selectedToolName;
-    }
-
-    public void draw(Point p, String text) {
-        try {
-            remoteCanvas.drawText(text, p.x, p.y);
-        } catch (RemoteException e) {
-            System.out.println("Error to draw to remote.");
-            popupNoServerConnectionErrorDialog();
-        }
     }
 
     public void setRemoteCanvas(IRemoteCanvas remoteCanvas) {
@@ -89,6 +82,15 @@ public class PaintManager {
         try {
             remoteCanvas.clearAll();
         } catch (RemoteException e) {
+            popupNoServerConnectionErrorDialog();
+        }
+    }
+
+    public void drawText(Point p, String text) {
+        try {
+            remoteCanvas.drawText(text, p.x, p.y);
+        } catch (RemoteException e) {
+            System.out.println("Error to draw to remote.");
             popupNoServerConnectionErrorDialog();
         }
     }
@@ -196,6 +198,19 @@ public class PaintManager {
 
             System.out.println("    | complete drawing");
             this.clearPoints();
+        }
+    }
+
+    public void drawPen(Point newPoint) {
+        long curTime = System.currentTimeMillis();
+        // Limit how regularly new line segments are created to avoid
+        // saturating the network with line segments.
+        if ((curTime - lastUpdateTime) < 50) {
+            return;
+        }
+        lastUpdateTime = curTime;
+        if (!newPoint.equals(lastPoint)) {
+            drawLine(newPoint);
         }
     }
 

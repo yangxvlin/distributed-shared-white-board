@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
 import static WhiteBoard.Contant.*;
@@ -19,7 +20,7 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
  * description:
  **/
 
-public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
+public class WhiteboardCanvasPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private PaintManager paintManager;
 
@@ -27,6 +28,7 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
         this.paintManager = paintManager;
         setBackground(Color.WHITE);
         addMouseListener(this);
+        addMouseMotionListener(this);
     }
 
     @Override
@@ -42,7 +44,6 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
                             null);
             this.repaint();
         } catch (RemoteException e) {
-            e.printStackTrace();
             popupNoServerConnectionErrorDialog();
         } catch (NullPointerException e) {
             System.out.println("    | canvas panel <paintComponent> null pointer");
@@ -89,7 +90,7 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
                 break;
             case RECTANGLE:
                 if (isLeftMouseButton(e)) {
-                    // Set origin/ end point.
+                    // Set origin/end point.
                     paintManager.drawRectangle(newPoint);
                 } else if (isRightMouseButton(e)) {
                     // Cancel drawing.
@@ -102,10 +103,14 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
                 String data = showInputDialog("Please input the text:");
                 if (data != null && !data.isEmpty()) {
                     System.out.println(data);
-                    paintManager.draw(newPoint, data);
+                    paintManager.drawText(newPoint, data);
                 } else {
                     System.out.println("    | user cancel to input text or input nothing");
                 }
+                break;
+            case PEN:
+//                paintManager.clearPoints();
+                System.out.println("    | Pen clicked");
                 break;
             default:
                 System.out.println("Drawing tool not implemented: " + toolSelected);
@@ -129,7 +134,15 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        String toolSelected = paintManager.getSelectedToolName();
+        switch (toolSelected) {
+            case PEN:
+                System.out.println("    | Pen released");
+                paintManager.clearPoints();
+                break;
+            default:
+                System.out.println("Unknown tool dragged");
+        }
     }
 
     /**
@@ -149,6 +162,44 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener {
      */
     @Override
     public void mouseExited(MouseEvent e) {
+
+    }
+
+    /**
+     * Invoked when a mouse button is pressed on a component and then
+     * dragged.  <code>MOUSE_DRAGGED</code> events will continue to be
+     * delivered to the component where the drag originated until the
+     * mouse button is released (regardless of whether the mouse position
+     * is within the bounds of the component).
+     * <p>
+     * Due to platform-dependent Drag&amp;Drop implementations,
+     * <code>MOUSE_DRAGGED</code> events may not be delivered during a native
+     * Drag&amp;Drop operation.
+     *
+     * @param e
+     */
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        Point newPoint = e.getPoint();
+        String toolSelected = paintManager.getSelectedToolName();
+        switch (toolSelected) {
+            case PEN:
+                System.out.println("    | Pen dragged");
+                paintManager.drawPen(newPoint);
+                break;
+            default:
+                System.out.println("Unknown tool dragged");
+        }
+    }
+
+    /**
+     * Invoked when the mouse cursor has been moved onto a component
+     * but no buttons have been pushed.
+     *
+     * @param e
+     */
+    @Override
+    public void mouseMoved(MouseEvent e) {
 
     }
 }

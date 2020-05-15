@@ -1,5 +1,7 @@
 package WhiteBoard;
 
+import Communication.ClientConnection;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -13,8 +15,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.rmi.RemoteException;
 
+import static Communication.CommunicationConstant.*;
 import static WhiteBoard.Util.*;
 
 /**
@@ -25,8 +27,11 @@ import static WhiteBoard.Util.*;
  **/
 
 public class FileMenu extends JMenu {
+    private ClientConnection clientConnection;
+
     public FileMenu(String appTitle, Frame frame, PaintManager paintManager) {
         super("File (Alt+F)");
+        this.clientConnection = clientConnection;
         setMnemonic(KeyEvent.VK_F);
 
         JMenuItem newMenuItem = new JMenuItem("New", KeyEvent.VK_N);
@@ -36,6 +41,9 @@ public class FileMenu extends JMenu {
                 System.out.println("New pressed");
                 paintManager.clearCanvas();
                 paintManager.clearPoints();
+                if (clientConnection != null) {
+                    clientConnection.notifyUserWithManagerOperation(MANAGER_NEW);
+                }
             }
         });
         add(newMenuItem);
@@ -69,6 +77,9 @@ public class FileMenu extends JMenu {
                         img = ImageIO.read(file);
                         paintManager.setImage(img);
                         popupDialog("Successful open image: " + file.getName());
+                        if (clientConnection != null) {
+                            clientConnection.notifyUserWithManagerOperation(MANAGER_OPEN);
+                        }
                     } catch (IOException e1) {
                         e1.printStackTrace();
                         popupDialog("Read image fail.");
@@ -135,5 +146,9 @@ public class FileMenu extends JMenu {
             }
         });
         add(close);
+    }
+
+    public void setClientConnection(ClientConnection clientConnection) {
+        this.clientConnection = clientConnection;
     }
 }

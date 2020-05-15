@@ -39,11 +39,16 @@ public class UserCommunicationThread extends Thread {
             String requestType = (String) jsonObject.get(USER_REQUEST);
             switch (requestType) {
                 case KICK_OUT_USER:
-
                     app.kickedOut();
                     break;
                 case MANAGER_CLOSE:
                     app.closeByManager();
+                    break;
+                case MANAGER_NEW:
+                    app.notifyUser(MANAGER_NEW);
+                    break;
+                case MANAGER_OPEN:
+                    app.notifyUser(MANAGER_OPEN);
                     break;
                 default:
                     System.out.println("Unknown request: " + request);

@@ -107,4 +107,16 @@ public class ClientConnection {
             popupNoServerConnectionErrorDialog();
         }
     }
+
+    public void notifyUserWithManagerOperation(String type) {
+        JSONObject obj = new JSONObject();
+
+        obj.put(USER_REQUEST, type);
+
+        try {
+            socket.send(obj.toJSONString());
+        } catch (IOException e) {
+            popupNoServerConnectionErrorDialog();
+        }
+    }
 }

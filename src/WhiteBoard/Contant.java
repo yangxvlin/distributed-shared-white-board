@@ -21,6 +21,8 @@ public class Contant {
 
     public static final String TEXT = "Text";
 
+    public static final String PEN = "Pen";
+
     public static final int CANVAS_WIDTH = 600;
 
     public static final int CANVAS_HEIGHT = 600;
