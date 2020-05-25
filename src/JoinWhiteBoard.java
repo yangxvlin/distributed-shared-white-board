@@ -78,23 +78,13 @@ public class JoinWhiteBoard {
 
     private static void parseArguments(String args[]) {
         if (args.length < 3) {
-            System.out.println("Not enough arguments! should be <serverIPAddress> <serverPort> username");
+            popupDialog("Not enough arguments! should be <serverIPAddress> <serverPort> username");
             System.exit(1);
         }
 
         serverAddress = args[0];
 
-        try {
-            serverPort = Integer.parseInt(args[1]);
-
-            if (serverPort < 1204 || serverPort > 65535) {
-                System.out.println("server port number should be 1024-65535");
-                System.exit(1);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("server port number should be an integer");
-            System.exit(1);
-        }
+        serverPort = util.parsePort(args[1]);
 
         userName = args[2];
     }

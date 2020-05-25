@@ -13,6 +13,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import static WhiteBoard.Util.popupDialog;
+
 /**
  * Xulin Yang, 904904
  *
@@ -81,20 +83,11 @@ public class Server {
 
     private static void parseArguments(String args[]) {
         if (args.length < 1) {
-            System.out.println("Not enough arguments! should be <server port>");
+            popupDialog("Not enough arguments! should be <server port>");
             System.exit(1);
         }
 
-        try {
-            serverPort = Integer.parseInt(args[1]);
 
-            if (serverPort < 1204 || serverPort > 65535) {
-                System.out.println("server port number should be 1024-65535");
-                System.exit(1);
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("server port number should be an integer");
-            System.exit(1);
-        }
+        serverPort = util.parsePort(args[1]);
     }
 }
