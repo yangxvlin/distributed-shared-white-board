@@ -51,11 +51,13 @@ public class Server {
             ServerGUI serverGUI = new ServerGUI(userList);
             System.out.println("GUI ready");
         } catch (AlreadyBoundException e) {
-            e.printStackTrace();
+            popupDialog("RMI object already bound");
         } catch (AccessException e) {
-            e.printStackTrace();
+            popupDialog("RMI access fail");
+            System.exit(1);
         } catch (RemoteException e) {
-            e.printStackTrace();
+            popupDialog("RMI connection fail");
+            System.exit(1);
         }
 
 
@@ -72,9 +74,7 @@ public class Server {
                 clientRequestsThread.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("Create server socket fail");
-            System.exit(1);
         }
 
 
