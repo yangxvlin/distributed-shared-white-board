@@ -7,7 +7,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.rmi.RemoteException;
 
-import static WhiteBoard.Contant.*;
+import static WhiteBoard.PaintConstant.*;
 import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
 import static javax.swing.JOptionPane.showInputDialog;
 import static javax.swing.SwingUtilities.isLeftMouseButton;
@@ -17,11 +17,14 @@ import static javax.swing.SwingUtilities.isRightMouseButton;
  * Xulin Yang, 904904
  *
  * @create 2020-05-12 21:30
- * description:
+ * description: canvas for user to paint
  **/
 
 public class WhiteboardCanvasPanel extends JPanel implements MouseListener, MouseMotionListener {
 
+    /**
+     * handle user's drawing update on canvas
+     */
     private PaintManager paintManager;
 
     public WhiteboardCanvasPanel(PaintManager paintManager) {
@@ -34,7 +37,7 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener, Mous
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-
+        // update canvas
         try {
             g.drawImage(paintManager.getRemoteCanvas().getCanvas().getImage(),
                             0,
@@ -51,20 +54,17 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener, Mous
     }
 
     /**
-     * Invoked when the mouse button has been clicked (pressed
-     * and released) on a component.
+     * Invoked when the mouse button has been clicked (pressed on a component.
      *
-     * @param e
+     * @param e MouseEvent
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-//        canvas.requestFocusInWindow();
-//        e = SwingUtilities.convertMouseEvent(e.getComponent(), e, this);
         Point newPoint = e.getPoint();
-//        newPoint = new Point(newPoint.x + 10, newPoint.y + 50);
 
         String toolSelected = paintManager.getSelectedToolName();
 
+        // perform tool's update
         switch (toolSelected) {
             case LINE:
                 if (isLeftMouseButton(e)) {
@@ -109,7 +109,6 @@ public class WhiteboardCanvasPanel extends JPanel implements MouseListener, Mous
                 }
                 break;
             case PEN:
-//                paintManager.clearPoints();
                 System.out.println("    | Pen clicked");
                 break;
             default:

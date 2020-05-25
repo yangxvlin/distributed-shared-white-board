@@ -15,59 +15,82 @@ import static WhiteBoard.WhiteBoardConstant.REJECTED;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 20:00
- * description:
+ * description: dialog with time counting down
  **/
 
 public class TimeDialog {
+    /**
+     * second to count down
+     */
     private int seconds = 0;
-    private JLabel label = new JLabel();
-    private JDialog dialog = null;
-    private boolean result = REJECTED;
-    public boolean showDialog(JFrame father, String message, int sec) {
 
-        String message1 = message;
+    /**
+     * label to be displayed
+     */
+    private JLabel label = new JLabel();
+
+    /**
+     * java dialog
+     */
+    private JDialog dialog = null;
+
+    /**
+     * user's selection result for the dialog
+     */
+    private boolean result = REJECTED;
+
+    /**
+     * @param parent parent frame
+     * @param message message to be displayed
+     * @param sec seconds to be count down
+     * @return true if user accept, false otherwise
+     */
+    public boolean showDialog(JFrame parent, String message, int sec) {
         seconds = sec;
 
+        // setup label
         label.setText(message);
         label.setBounds(80,6, 400, 40);
 
-        ScheduledExecutorService s = Executors.newSingleThreadScheduledExecutor();
-
+        // user confirm the dialog
         JButton confirm = new JButton("Accept");
         confirm.setBounds(100,40,80,20);
         confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 result = ACCEPTED;
-                father.setEnabled(true);
+                parent.setEnabled(true);
                 TimeDialog.this.dialog.dispose();
             }
         });
 
+        // user cancel the dialog
         JButton cancel = new JButton("Reject");
         cancel.setBounds(270,40,80,20);
         cancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 result = REJECTED;
-                father.setEnabled(true);
+                parent.setEnabled(true);
                 TimeDialog.this.dialog.dispose();
             }
         });
 
-        dialog = new JDialog(father, true);
-        father.setEnabled(false);
+        // setup the dialog
+        dialog = new JDialog(parent, true);
+        parent.setEnabled(false);
         dialog.setTitle("Note: Auto reject after: "+ seconds +" seconds");
         dialog.setLayout(null);
         dialog.add(label);
         dialog.add(confirm);
         dialog.add(cancel);
 
+        // scheduler for counting down and update GUI
+        // select cancel for auto timeout
+        ScheduledExecutorService s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                // TODO Auto-generated method stub
-
                 TimeDialog.this.seconds--;
                 if (TimeDialog.this.seconds == 0) {
                     cancel.doClick();
@@ -79,7 +102,7 @@ public class TimeDialog {
 
         dialog.pack();
         dialog.setSize(new Dimension(500,150));
-        dialog.setLocationRelativeTo(father);
+        dialog.setLocationRelativeTo(parent);
         dialog.setVisible(true);
 
         return result;

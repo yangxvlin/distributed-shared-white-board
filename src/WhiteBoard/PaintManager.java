@@ -17,21 +17,38 @@ import static WhiteBoard.Util.saveImage;
  * Xulin Yang, 904904
  *
  * @create 2020-05-12 16:03
- * description:
+ * description: manager user's request to paint on the canvas
  **/
 
 public class PaintManager {
+    /**
+     * user's using tool
+     */
     private String selectedToolName;
 
+    /**
+     * remote canvas object
+     */
     private IRemoteCanvas remoteCanvas;
 
-    // Points for drawing lines.
+    /**
+     * end point for drawing lines
+     */
     private Point lastPoint;
 
+    /**
+     * start point for drawing lines.
+     */
     private Point firstPoint;
 
+    /**
+     * user's last update time
+     */
     private long lastUpdateTime;
 
+    /**
+     * listener for using changing the tools
+     */
     public final ActionListener PAINT_TOOL_ACTION_LISTENER = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -44,10 +61,16 @@ public class PaintManager {
     public PaintManager() {
     }
 
+    /**
+     * @return selected Tool Name
+     */
     public String getSelectedToolName() {
         return selectedToolName;
     }
 
+    /**
+     * @param remoteCanvas remote canvas object
+     */
     public void setRemoteCanvas(IRemoteCanvas remoteCanvas) {
         this.remoteCanvas = remoteCanvas;
     }
@@ -56,28 +79,18 @@ public class PaintManager {
         return remoteCanvas;
     }
 
-    public Point getLastPoint() {
-        return lastPoint;
-    }
-
-    public void setLastPoint(Point lastPoint) {
-        this.lastPoint = lastPoint;
-    }
-
-    public Point getFirstPoint() {
-        return firstPoint;
-    }
-
-    public void setFirstPoint(Point firstPoint) {
-        this.firstPoint = firstPoint;
-    }
-
+    /**
+     * clear drawing points
+     */
     public void clearPoints() {
         System.out.println("    | clear all drawing points");
         firstPoint = null;
         lastPoint = null;
     }
 
+    /**
+     * clear remote canvas
+     */
     public void clearCanvas() {
         try {
             remoteCanvas.clearAll();
@@ -86,6 +99,10 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param p location of text
+     * @param text text string
+     */
     public void drawText(Point p, String text) {
         try {
             remoteCanvas.drawText(text, p.x, p.y);
@@ -95,6 +112,9 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param newPoint one point of rectangle
+     */
     public void drawRectangle(Point newPoint) {
         if (firstPoint == null) {
             firstPoint = newPoint;
@@ -145,6 +165,9 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param newPoint point of a line
+     */
     public void drawLine(Point newPoint) {
         if (firstPoint == null) {
             firstPoint = newPoint;
@@ -164,6 +187,9 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param newPoint point of a circle
+     */
     public void drawCircle(Point newPoint) {
         if (firstPoint == null) {
             firstPoint = newPoint;
@@ -201,10 +227,12 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param newPoint one point of freedom line by pen
+     */
     public void drawPen(Point newPoint) {
         long curTime = System.currentTimeMillis();
-        // Limit how regularly new line segments are created to avoid
-        // saturating the network with line segments.
+        // Limit how regularly new line segments are created to avoid saturating the network with line segments.
         if ((curTime - lastUpdateTime) < 50) {
             return;
         }
@@ -214,6 +242,9 @@ public class PaintManager {
         }
     }
 
+    /**
+     * @param image loaded image
+     */
     public void setImage(BufferedImage image) {
         try {
             remoteCanvas.setImage(new SerializableBufferedImage(image));
@@ -223,6 +254,9 @@ public class PaintManager {
         clearPoints();
     }
 
+    /**
+     * @param fileName file to be saved to
+     */
     public void saveWhiteBoard(String fileName) {
         try {
             saveImage(this.getRemoteCanvas().getCanvas().getImage(), fileName);

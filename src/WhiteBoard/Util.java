@@ -12,7 +12,7 @@ import java.util.Date;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 19:34
- * description:
+ * description: some helper functions
  **/
 
 public class Util {
@@ -45,10 +45,17 @@ public class Util {
         );
     }
 
+    /**
+     * no connection error and exit
+     */
     public static void popupNoServerConnectionErrorDialog() {
         popupErrorDialog("No connection to server");
     }
 
+    /**
+     * @param bufferedImage image to be saved
+     * @param filePath file to be saved to
+     */
     public static void saveImage(BufferedImage bufferedImage, String filePath) {
         File outfile = new File(filePath);
         try {
@@ -58,6 +65,9 @@ public class Util {
         }
     }
 
+    /**
+     * @return auto generated file name to be saved to
+     */
     public static String generateAutoFileName() {
         return "shared-whiteboard-auto-save-" +
                 new SimpleDateFormat("yyyy-MM-dd-HH-mm").format(new Date()) +

@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 
-import static WhiteBoard.Contant.CANVAS_HEIGHT;
-import static WhiteBoard.Contant.CANVAS_WIDTH;
+import static WhiteBoard.PaintConstant.CANVAS_HEIGHT;
+import static WhiteBoard.PaintConstant.CANVAS_WIDTH;
 
 /**
  * Xulin Yang, 904904

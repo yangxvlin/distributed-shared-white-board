@@ -1,14 +1,11 @@
 package remote;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.MemoryCacheImageInputStream;
-import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import static WhiteBoard.Contant.*;
+import static WhiteBoard.PaintConstant.*;
 
 /**
  * Xulin Yang, 904904

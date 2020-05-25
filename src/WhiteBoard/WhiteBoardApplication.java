@@ -11,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 
-import static WhiteBoard.Contant.*;
+import static WhiteBoard.PaintConstant.*;
 import static WhiteBoard.Util.popupDialog;
 import static WhiteBoard.Util.popupErrorDialog;
 import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
@@ -25,35 +25,61 @@ import static WhiteBoard.WhiteBoardConstant.*;
  **/
 
 public class WhiteBoardApplication {
+    /**
+     * true if user is manager
+     */
     private boolean isManager;
 
+    /**
+     * frame object
+     */
     private JFrame frame;
 
+    /**
+     * user unique id
+     */
     private String uid;
 
+    /**
+     * thread to update user list on GUI from remote object
+     */
     private Thread updateUserListThread;
 
-//    private Thread updateCanvasThread;
-
+    /**
+     * client's connection to server
+     */
     private ClientConnection clientConnection;
 
+    /**
+     * remote user list object
+     */
     private IRemoteUserList remoteUserList;
 
+    /**
+     * is the user kicked out by the manager
+     */
     private boolean isKickedOut = false;
 
+    /**
+     * paint on canvas manager
+     */
     private PaintManager paintManager;
 
-    private WhiteboardCanvasPanel whiteboardCanvasPanel;
-
-    private String appTitle;
-
+    /**
+     * file menu object
+     */
     private FileMenu fileMenu;
 
+    /**
+     * @param isManager true if user is manager
+     */
     public WhiteBoardApplication(boolean isManager) {
         this.isManager = isManager;
 
+        // initialize paintManager
         this.paintManager = new PaintManager();
 
+        // setup frame
         frame = new JFrame();
         frame.setLayout(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,31 +98,38 @@ public class WhiteBoardApplication {
         frame.setSize(1000, 800);
         frame.setResizable(false);
 
+        String appTitle;
         if (this.isManager) {
+            // setup manager's app name
             appTitle = APP_TITLE + " (Manager)";
             frame.setTitle(appTitle);
+
+            // setup the file menu for the manager
             JMenuBar menuBar = new JMenuBar();
             frame.setJMenuBar(menuBar);
-            fileMenu = new FileMenu(appTitle, frame, paintManager);
+            fileMenu = new FileMenu(frame, paintManager);
             menuBar.add(fileMenu);
 
+            // setup the label for kickout user
             JLabel kickOutLabel = new JLabel("Kick out an user:");
             kickOutLabel.setSize(kickOutLabel.getPreferredSize());
             kickOutLabel.setLocation(700, 450);
             frame.add(kickOutLabel);
 
+            // setup the inputting file for user to be kickedout
             JTextField kickOutTextField = new JTextField();
             kickOutTextField.setBounds(700, 470, 250, 50);
             frame.add(kickOutTextField);
 
+            // setup button to confirm the kickout of the user
             JButton kickOutButton = new JButton("Kick out");
             kickOutButton.setBounds(700, 530, 250, 30);
             kickOutButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    // kickout a normal user
                     String kickOutUID = kickOutTextField.getText();
                     System.out.println("kick out: " + kickOutTextField.getText());
-
                     try {
                         if (kickOutUID.equals(remoteUserList.getManagerName())) {
                             popupDialog("Can't kick out yourself");
@@ -110,16 +143,18 @@ public class WhiteBoardApplication {
             });
             frame.add(kickOutButton);
         } else {
+            // setup normal user's app name
             appTitle = APP_TITLE + " (User)";
             frame.setTitle(appTitle);
         }
 
+        // set up  users display label
         JLabel jLabel = new JLabel("Users: username (uid)");
         jLabel.setSize(jLabel.getPreferredSize());
         jLabel.setLocation(700, 5);
         frame.add(jLabel);
 
-
+        // paint tool selection setup
         JRadioButton circleButton = new JRadioButton(CIRCLE);
         circleButton.setBounds(10, 5, 60, 40);
         circleButton.setActionCommand(CIRCLE);
@@ -164,13 +199,15 @@ public class WhiteBoardApplication {
 
         frame.add(buttonPanel);
 
-        this.whiteboardCanvasPanel = new WhiteboardCanvasPanel(paintManager);
+        // canvas setup
+        WhiteboardCanvasPanel whiteboardCanvasPanel = new WhiteboardCanvasPanel(paintManager);
         whiteboardCanvasPanel.setBounds(10, 50, CANVAS_WIDTH, CANVAS_HEIGHT);
         frame.add(whiteboardCanvasPanel);
-
-//        frame.setVisible(true);
     }
 
+    /**
+     * @param clientConnection client's connection to server
+     */
     public void setClientConnection(ClientConnection clientConnection) {
         this.clientConnection = clientConnection;
         if (this.isManager) {
@@ -178,10 +215,16 @@ public class WhiteBoardApplication {
         }
     }
 
+    /**
+     * @param remoteCanvas remote canvas object
+     */
     public void setRemoteCanvas(IRemoteCanvas remoteCanvas) {
         paintManager.setRemoteCanvas(remoteCanvas);
     }
 
+    /**
+     * @param remoteUserList remote user list object
+     */
     public void setRemoteUserList(IRemoteUserList remoteUserList) {
         JTextArea jTextArea = new JTextArea();
         jTextArea.setEditable(false);
@@ -190,6 +233,7 @@ public class WhiteBoardApplication {
 
         this.remoteUserList = remoteUserList;
 
+        // thread to update users in whiteboard
         updateUserListThread = new Thread() {
             @Override
             public void run() {
@@ -230,31 +274,49 @@ public class WhiteBoardApplication {
         updateUserListThread.start();
     }
 
+    /**
+     * @param uid unique user id
+     */
     public void start(String uid) {
         this.uid = uid;
 
         frame.setVisible(true);
     }
 
+    /**
+     * @param msg error message
+     */
     public void error(String msg) {
         popupErrorDialog(msg);
         stop();
     }
 
+    /**
+     * stop the background application
+     */
     public void stop() {
         updateUserListThread.interrupt();
-//        updateCanvasThread.interrupt();
     }
 
+    /**
+     * @return true if the client is manager
+     */
     public boolean isManager() {
         return isManager;
     }
 
+    /**
+     * @param candidateUID candidate's unique id
+     * @return a counting down dialog to accept/reject client's request to join the whiteboard
+     */
     public boolean askAcceptCandidate(String candidateUID) {
         TimeDialog dialog = new TimeDialog();
         return dialog.showDialog(frame, candidateUID + SHARE_PROMPT, ASK_MANAGER_JOIN_TIMEOUT);
     }
 
+    /**
+     * user in the application is kicked out
+     */
     public void kickedOut() {
         frame.setTitle(frame.getTitle() + " - [Kicked out]");
         stop();
@@ -263,6 +325,9 @@ public class WhiteBoardApplication {
         closeFrame();
     }
 
+    /**
+     * close the frame
+     */
     private void closeFrame() {
         if (!isKickedOut) {
             clientConnection.disconnect(isManager, uid);
@@ -271,6 +336,9 @@ public class WhiteBoardApplication {
         System.exit(0);
     }
 
+    /**
+     * @param e WindowEvent
+     */
     private void closeFrame(WindowEvent e) {
         if (!isKickedOut) {
             clientConnection.disconnect(isManager, uid);
@@ -280,6 +348,9 @@ public class WhiteBoardApplication {
         System.exit(0);
     }
 
+    /**
+     * whiteboard closed by the manager
+     */
     public void closeByManager() {
         frame.setTitle(frame.getTitle() + " - [Closed]");
         stop();
@@ -288,11 +359,10 @@ public class WhiteBoardApplication {
         closeFrame();
     }
 
+    /**
+     * @param msg popup message for user
+     */
     public void notifyUser(String msg) {
         popupDialog(msg);
-    }
-
-    public String getAppTitle() {
-        return appTitle;
     }
 }

@@ -23,24 +23,34 @@ import static WhiteBoard.Util.*;
  * Xulin Yang, 904904
  *
  * @create 2020-05-08 15:14
- * description:
+ * description: manager's file menu
  **/
 
 public class FileMenu extends JMenu {
+    /**
+     * connection to server
+     */
     private ClientConnection clientConnection;
 
-    public FileMenu(String appTitle, Frame frame, PaintManager paintManager) {
+    /**
+     * @param frame parent frame
+     * @param paintManager paint manager
+     */
+    public FileMenu(Frame frame, PaintManager paintManager) {
         super("File (Alt+F)");
-        this.clientConnection = clientConnection;
+        this.clientConnection = null;
         setMnemonic(KeyEvent.VK_F);
 
+        // New a canvas
         JMenuItem newMenuItem = new JMenuItem("New", KeyEvent.VK_N);
         newMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("New pressed");
+                // clear canvas
                 paintManager.clearCanvas();
                 paintManager.clearPoints();
+                // send notification
                 if (clientConnection != null) {
                     clientConnection.notifyUserWithManagerOperation(MANAGER_NEW);
                 }
@@ -48,12 +58,14 @@ public class FileMenu extends JMenu {
         });
         add(newMenuItem);
 
+        // open a canvas
         JMenuItem open = new JMenuItem("Open", KeyEvent.VK_O);
         open.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Open pressed");
 
+                // choose a canvas
                 final JFileChooser fc = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("IMAGE FILES", IMAGE_TYPE);
                 fc.setFileFilter(filter);
@@ -71,7 +83,7 @@ public class FileMenu extends JMenu {
                         popupDialog("Read file fail.");
                         return;
                     }
-
+                    // read canvas and update
                     BufferedImage img = null;
                     try {
                         img = ImageIO.read(file);
@@ -81,7 +93,6 @@ public class FileMenu extends JMenu {
                             clientConnection.notifyUserWithManagerOperation(MANAGER_OPEN);
                         }
                     } catch (IOException e1) {
-                        e1.printStackTrace();
                         popupDialog("Read image fail.");
                     }
                 }
@@ -89,6 +100,7 @@ public class FileMenu extends JMenu {
         });
         add(open);
 
+        // save a canvas to a auto generated file
         JMenuItem save = new JMenuItem("Save", KeyEvent.VK_S);
         save.addActionListener(new ActionListener() {
             @Override
@@ -100,16 +112,16 @@ public class FileMenu extends JMenu {
         });
         add(save);
 
+        // save a canvas to a specified file
         JMenuItem saveAs = new JMenuItem("Save As", KeyEvent.VK_A);
         saveAs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Save As pressed");
-
+                // select the location to be saved
                 JFileChooser fc = new JFileChooser();
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("IMAGE FILES", IMAGE_TYPE);
                 fc.setFileFilter(filter);
-//                fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                 int returnVal = fc.showSaveDialog(frame);
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -119,6 +131,7 @@ public class FileMenu extends JMenu {
                     if (!fileName.endsWith("." + IMAGE_TYPE)) {
                         fileName += "." + IMAGE_TYPE;
                     }
+                    // setup save to file
                     file = new File(fileName);
                     boolean result = false;
                     try {
@@ -130,13 +143,14 @@ public class FileMenu extends JMenu {
                     if (result) {
                         System.out.println("    | Successful create image file: " + file);
                     }
-
+                    // save to file
                     paintManager.saveWhiteBoard(fileName);
                 }
             }
         });
         add(saveAs);
 
+        // close the application
         JMenuItem close = new JMenuItem("Close", KeyEvent.VK_C);
         close.addActionListener(new ActionListener() {
             @Override
@@ -148,6 +162,9 @@ public class FileMenu extends JMenu {
         add(close);
     }
 
+    /**
+     * @param clientConnection client's connection to server
+     */
     public void setClientConnection(ClientConnection clientConnection) {
         this.clientConnection = clientConnection;
     }

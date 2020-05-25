@@ -7,14 +7,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 
-import static WhiteBoard.Contant.REMOTE_OBJECT_UI_UPDATE_RATE;
-import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
+import static WhiteBoard.PaintConstant.REMOTE_OBJECT_UI_UPDATE_RATE;
 
 /**
  * Xulin Yang, 904904
  *
  * @create 2020-05-15 21:51
- * description:
+ * description: server GUI
  **/
 
 public class ServerGUI {
@@ -38,6 +37,8 @@ public class ServerGUI {
                 System.exit(0);
             }
         });
+
+        // setup frame
         frame.setSize(200, 350);
         frame.setResizable(false);
         frame.setTitle("Distributed Whiteboard Server");
@@ -60,6 +61,7 @@ public class ServerGUI {
         userText.setBounds(70, 30, 120, 250);
         frame.add(userText);
 
+        // tread to update user list GUI periodically
         updateUIThread = new Thread() {
             @Override
             public void run() {
