@@ -52,6 +52,7 @@ public class Server {
             System.out.println("GUI ready");
         } catch (AlreadyBoundException e) {
             popupDialog("RMI object already bound");
+            System.exit(1);
         } catch (AccessException e) {
             popupDialog("RMI access fail");
             System.exit(1);
@@ -76,16 +77,14 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Create server socket fail");
         }
-
-
     }
 
     /**
      * @param args inputted arguments
      */
     private static void parseArguments(String args[]) {
-        if (args.length < 1) {
-            popupDialog("Not enough arguments! should be <server port>");
+        if (args.length < 2) {
+            popupDialog("Not enough arguments! should be <server address> <server port>");
             System.exit(1);
         }
 
