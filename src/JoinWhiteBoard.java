@@ -23,21 +23,32 @@ import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
  **/
 
 public class JoinWhiteBoard {
+    /**
+     * the address of the server
+     */
     private static String serverAddress;
 
+    /**
+     * the address of the server port
+     */
     private static int serverPort;
 
+    /**
+     * client's user name
+     */
     private static String userName;
 
     public static void main(String args[]) {
         parseArguments(args);
 
+        // initialize app
         WhiteBoardApplication app = new WhiteBoardApplication(false);
 
         try {
-            //Connect to the rmi registry that is running on localhost
+            // Connect to the rmi registry that is running on localhost
             Registry registry = LocateRegistry.getRegistry("localhost");
 
+            // find remote object
             IRemoteUserList remoteUserList = (IRemoteUserList) registry.lookup(RegistryConstant.REMOTE_USER_LIST);
             IRemoteCanvas remoteCanvas = (IRemoteCanvas) registry.lookup(RegistryConstant.REMOTE_CANVAS);
             app.setRemoteUserList(remoteUserList);
@@ -56,7 +67,6 @@ public class JoinWhiteBoard {
                 }
             };
             t.start();
-
             connection.connect(app, userName);
 
             System.out.println("Whiteboard joined");
@@ -76,6 +86,9 @@ public class JoinWhiteBoard {
     }
 
 
+    /**
+     * @param args inputted arguments
+     */
     private static void parseArguments(String args[]) {
         if (args.length < 3) {
             popupDialog("Not enough arguments! should be <serverIPAddress> <serverPort> username");
