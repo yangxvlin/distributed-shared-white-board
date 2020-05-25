@@ -18,7 +18,7 @@ import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
  * Xulin Yang, 904904
  *
  * @create 2020-05-07 18:12
- * description:
+ * description: manager CreateWhiteBoard
  **/
 
 public class CreateWhiteBoard {
@@ -68,10 +68,7 @@ public class CreateWhiteBoard {
                 ManagerCommunicationThread joinRequestThread = new ManagerCommunicationThread(app, request, socket);
                 joinRequestThread.start();
             }
-        } catch (RemoteException e) {
-            System.out.println("Error get remote object");
-        } catch (NotBoundException e) {
-            System.out.println("Remote object not bound");
+        } catch (RemoteException | NotBoundException e) {
             popupNoServerConnectionErrorDialog();
         } catch (IOException e) {
             System.out.println("Error receive join requests from server");

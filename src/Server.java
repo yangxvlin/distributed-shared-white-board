@@ -19,7 +19,7 @@ import static WhiteBoard.Util.popupDialog;
  * Xulin Yang, 904904
  *
  * @create 2020-05-07 18:13
- * description:
+ * description: distributed shared whiteboard server
  **/
 
 public class Server {

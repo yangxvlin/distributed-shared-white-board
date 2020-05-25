@@ -19,7 +19,7 @@ import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
  * Xulin Yang, 904904
  *
  * @create 2020-05-07 18:13
- * description:
+ * description: client JoinWhiteBoard
  **/
 
 public class JoinWhiteBoard {
@@ -76,9 +76,7 @@ public class JoinWhiteBoard {
                 UserCommunicationThread kickOutThread = new UserCommunicationThread(app, request);
                 kickOutThread.start();
             }
-        } catch (RemoteException e) {
-            System.out.println("Error get remote object");
-        } catch (NotBoundException e) {
+        } catch (RemoteException | NotBoundException e) {
             popupNoServerConnectionErrorDialog();
         } catch (IOException e) {
             System.out.println("Error receive kick out requests from server");

@@ -9,6 +9,10 @@ import static WhiteBoard.Util.popupDialog;
 
 public class util {
 
+    /**
+     * @param port port string
+     * @return port int
+     */
     public static int parsePort(String port) {
         int result = 6000;
 
