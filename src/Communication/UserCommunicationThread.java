@@ -13,12 +13,19 @@ import static Communication.CommunicationConstant.*;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 23:44
- * description:
+ * description: the thread run for user to receive request from server
  **/
 
 public class UserCommunicationThread extends Thread {
 
+    /**
+     * application
+     */
     private final WhiteBoardApplication app;
+
+    /**
+     * server's request
+     */
     private final String request;
 
     public UserCommunicationThread(WhiteBoardApplication app, String request) {
@@ -33,6 +40,7 @@ public class UserCommunicationThread extends Thread {
         JSONObject jsonObject = new JSONObject();
         JSONParser jsonParser = new JSONParser();
 
+        // send responses
         try {
             jsonObject = (JSONObject) jsonParser.parse(request);
 

@@ -13,13 +13,24 @@ import static Communication.CommunicationConstant.*;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 20:26
- * description:
+ * description: the thread run for manager to receive request from server
  **/
 
 public class ManagerCommunicationThread extends Thread {
 
+    /**
+     * application
+     */
     private final WhiteBoardApplication app;
+
+    /**
+     * server's request
+     */
     private final String request;
+
+    /**
+     * server's socket
+     */
     private final CommunicationSocket socket;
 
     public ManagerCommunicationThread(WhiteBoardApplication app, String request, CommunicationSocket socket) {
@@ -35,6 +46,7 @@ public class ManagerCommunicationThread extends Thread {
         JSONObject jsonObject = new JSONObject();
         JSONParser jsonParser = new JSONParser();
 
+        // send responses
         try {
             jsonObject = (JSONObject) jsonParser.parse(request);
 

@@ -13,13 +13,19 @@ import static Communication.CommunicationConstant.*;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 1:21
- * description:
+ * description: the thread run for server to process request from client
  **/
 
 public class ClientRequestsThread extends Thread {
 
+    /**
+     * socket
+     */
     private CommunicationSocket client;
 
+    /**
+     * manage users using whiteboard
+     */
     private UserManager userManager;
 
     public ClientRequestsThread(CommunicationSocket client, UserManager userManager) {
@@ -48,6 +54,7 @@ public class ClientRequestsThread extends Thread {
 
                 String requestType = (String) jsonObject.get(USER_REQUEST);
 
+                // send response
                 switch (requestType) {
                     case CREATE_WHITEBOARD:
                         // already has manager

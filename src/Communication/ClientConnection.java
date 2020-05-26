@@ -14,16 +14,23 @@ import static WhiteBoard.Util.popupNoServerConnectionErrorDialog;
  * Xulin Yang, 904904
  *
  * @create 2020-05-11 15:24
- * description:
+ * description: client's connection socket to server
  **/
 
 public class ClientConnection {
+    /**
+     * server socket
+     */
     private CommunicationSocket socket;
 
     public ClientConnection(CommunicationSocket socket) {
         this.socket = socket;
     }
 
+    /**
+     * @param app application
+     * @param username user's name
+     */
     public void connect(WhiteBoardApplication app, String username) {
         JSONObject obj = new JSONObject();
         JSONParser parser = new JSONParser();
@@ -73,6 +80,10 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * @param isManager true if is manager
+     * @param uid user's unique id
+     */
     public void disconnect(boolean isManager, String uid) {
 
         JSONObject obj = new JSONObject();
@@ -95,6 +106,9 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * @param uid user to be kicked out
+     */
     public void kickOut(String uid) {
         JSONObject obj = new JSONObject();
 
@@ -108,6 +122,9 @@ public class ClientConnection {
         }
     }
 
+    /**
+     * @param type operation type
+     */
     public void notifyUserWithManagerOperation(String type) {
         JSONObject obj = new JSONObject();
 
