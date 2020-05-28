@@ -10,12 +10,21 @@ Shared whiteboards allow multiple users to draw simultaneously on a canvas. Ther
     Other users can ask to join the whiteboard application any time by inputting server’s IP address and port number
         - java JoinWhiteBoard <serverIPAddress> <serverPort> username
 
-### steps
+### start rmiregistry
 1. ```cd output/production/distributed-shared-white-board```
 2. ```start rmiregistry```
-3. server   ```java ```
-4. create   ```java ```
-5. join      ```java ```
+
+### start app
+1. ```cd submit```
+2. server   
+    
+    ```java -Djava.rmi.server.codebase=file:"E:\backup\code\java\distributed-shared-white-board\output\production\distributed-shared-white-board" -jar Server.jar 127.0.0.1 8001```
+3. create whiteboard 
+
+    ```java -Djava.rmi.server.codebase=file:"E:\backup\code\java\distributed-shared-white-board\output\production\distributed-shared-white-board" -jar CreateWhiteboard.jar 127.0.0.1 8001 manager-xuliny```
+4. join whiteboard 
+
+    ```java -Djava.rmi.server.codebase=file:"E:\backup\code\java\distributed-shared-white-board\output\production\distributed-shared-white-board" -jar JoinWhiteboard.jar 127.0.0.1 8001 user-peter```
 
 ## todo
 ### Client
