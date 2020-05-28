@@ -48,7 +48,7 @@ public class CommunicationSocket {
             is = new DataInputStream(socket.getInputStream());
             os = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error create socket");
         }
     }
 

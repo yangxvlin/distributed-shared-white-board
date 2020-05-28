@@ -13,9 +13,9 @@ Shared whiteboards allow multiple users to draw simultaneously on a canvas. Ther
 ### steps
 1. ```cd output/production/distributed-shared-white-board```
 2. ```start rmiregistry```
-3. server
-4. create
-5. join
+3. server   ```java ```
+4. create   ```java ```
+5. join      ```java ```
 
 ## todo
 ### Client

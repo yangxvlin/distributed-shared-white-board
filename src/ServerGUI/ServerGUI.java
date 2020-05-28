@@ -84,6 +84,7 @@ public class ServerGUI {
                         }
 
                     } catch (RemoteException e) {
+                        System.out.println("Remote object error");
                         break;
                     }
 
